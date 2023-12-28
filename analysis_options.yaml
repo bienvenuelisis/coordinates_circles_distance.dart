@@ -1,6 +1,8 @@
 analyzer:
-  strong-mode: true
-#   exclude:
+  strong-mode:
+    #implicit-casts: true
+    #implicit-dynamic: true
+#  exclude:
 #     - path/to/excluded/files/**
 
 # Lint rules and documentation, see http://dart-lang.github.io/linter/lints

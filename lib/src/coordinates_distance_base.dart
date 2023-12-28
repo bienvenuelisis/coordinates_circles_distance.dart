@@ -7,11 +7,20 @@ import 'package:coordinates_distance/src/formula/vincenty.dart';
 /// The great-circle is shortest distance between two points on the surface of a sphere
 /// See [Great-circle distance](https://en.wikipedia.org/wiki/Great-circle_distance)
 class Coordinates {
-  double latitude1;
-  double longitude1;
+  Coordinates.fromDegrees({
+    required this.latitude1,
+    required this.longitude1,
+    required this.latitude2,
+    required this.longitude2,
+  }) {
+    this.latitude1 = _radiansFromDegrees(latitude1);
+    this.longitude1 = _radiansFromDegrees(longitude1);
 
-  double latitude2;
-  double longitude2;
+    this.latitude2 = _radiansFromDegrees(latitude2);
+    this.longitude2 = _radiansFromDegrees(longitude2);
+
+    _throwExceptionOnInvalidCoordinates();
+  }
 
   Coordinates.fromRadians({
     required this.latitude1,
@@ -28,20 +37,10 @@ class Coordinates {
     _throwExceptionOnInvalidCoordinates();
   }
 
-  Coordinates.fromDegrees({
-    required this.latitude1,
-    required this.longitude1,
-    required this.latitude2,
-    required this.longitude2,
-  }) {
-    this.latitude1 = _radiansFromDegrees(latitude1);
-    this.longitude1 = _radiansFromDegrees(longitude1);
-
-    this.latitude2 = _radiansFromDegrees(latitude2);
-    this.longitude2 = _radiansFromDegrees(longitude2);
-
-    _throwExceptionOnInvalidCoordinates();
-  }
+  double latitude1;
+  double latitude2;
+  double longitude1;
+  double longitude2;
 
   /// Calculate distance using the Haversine formula
   /// The haversine formula determines the great-circle distance between two points on a sphere given their longitudes and latitudes
@@ -79,8 +78,6 @@ class Coordinates {
     );
   }
 
-  double _radiansFromDegrees(final double degrees) => degrees * (pi / 180.0);
-
   /// A coordinate is considered invalid if it meets at least one of the following criteria:
   ///
   /// - Its latitude is greater than 90 degrees or less than -90 degrees.
@@ -97,6 +94,8 @@ class Coordinates {
   bool _isValidLongitude(double longitudeInRadians) =>
       !(longitudeInRadians < _radiansFromDegrees(-180.0) ||
           longitudeInRadians > _radiansFromDegrees(180.0));
+
+  double _radiansFromDegrees(final double degrees) => degrees * (pi / 180.0);
 
   void _throwExceptionOnInvalidCoordinates() {
     String invalidDescription = """
